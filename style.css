@@ -267,6 +267,8 @@ h1:hover::before {
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     gap: 8px;
+    position: relative;
+    overflow: hidden;
 }
 
 .custom-google-signin:hover {
@@ -274,9 +276,48 @@ h1:hover::before {
     transform: translateY(-1px);
 }
 
+.custom-google-signin:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
 .custom-google-signin .google-icon {
     width: 18px;
     height: 18px;
+}
+
+/* تأثير الموجة عند النقر */
+.custom-google-signin::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.custom-google-signin:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
 }
 
 .sign-out-btn {
