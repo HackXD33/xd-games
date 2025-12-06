@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الفقاعات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- إضافة أيقونات Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- إضافة مكتبة Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>xd game</h1>
+            <div class="games-nav">
+                <a href="index.html" class="game-link active">لعبة الفقاعات</a>
+                <a href="snake.html" class="game-link">لعبة الثعبان</a>
+            </div>
+            <div class="game-info">
+                <div class="score">النقاط: <span id="score">0</span></div>
+                <div class="missed-bubbles">الفقاعات الفائتة: <span id="missed">0</span>/5</div>
+                <div class="timer" id="timer" style="display: none;">الوقت: <span id="time-left">60</span>ثانية</div>
+                <div class="level">المستوى: <span id="level">1</span></div>
+                <div class="high-score">أفضل نقاط: <span id="high-score">0</span></div>
+            </div>
+            <div class="controls">
+                <button id="sound-toggle" class="control-btn"><i class="fas fa-volume-up"></i></button>
+                <button id="settings-btn" class="control-btn"><i class="fas fa-cog"></i></button>
+                <div class="auth-container">
+                    <div id="user-info" class="user-info" style="display: none;">
+                        <img id="user-photo" class="user-photo" src="" alt="User Photo">
+                        <span id="user-name" class="user-name"></span>
+                        <button id="sign-out-btn" class="sign-out-btn">تسجيل الخروج</button>
+                    </div>
+
+                    <div id="g_id_onload"
+                         data-client_id="YOUR_CLIENT_ID.apps.googleusercontent.com"
+                         data-callback="handleSignIn"
+                         data-auto_prompt="false">
+                    </div>
+
+                    <div id="sign-in-btn" class="g_id_signin"
+                         data-type="standard">
+                    </div>
+
+                    <button id="custom-signin-btn" class="custom-google-signin">
+                        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        تسجيل الدخول بحساب جوجل
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="game-modes">
+                <button id="challenge-mode" class="mode-btn">وضع التحدي</button>
+                <button id="survival-mode" class="mode-btn">وضع النجاة</button>
+                <button id="zen-mode" class="mode-btn">وضع الزن</button>
+            </div>
+
+            <div id="game-area" class="game-area">
+                <div id="start-screen" class="start-screen">
+                    <h2>اختر وضع اللعب للبدء</h2>
+                    <p>في وضع التحدي: سجل أكبر عدد من النقاط في 60 ثانية</p>
+                    <p>في وضع النجاة: لا تدع 5 فقاعات تفوتك</p>
+                    <p>في وضع الزن: العب بدون قيود الوقت أو الفقاعات الفائتة</p>
+                    <div class="achievements-preview">
+                        <h3>إنجازاتك</h3>
+                        <div id="achievements-list" class="achievements-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="game-over" class="game-over" style="display: none;">
+                <h2>انتهت اللعبة!</h2>
+                <p>نقاطك النهائية: <span id="final-score">0</span></p>
+                <p>المستوى الذي وصلت إليه: <span id="final-level">1</span></p>
+                <div id="new-achievement" class="achievement-popup" style="display: none;">
+                    <h3>إنجاز جديد!</h3>
+                    <p id="achievement-text"></p>
+                </div>
+                <button id="restart-btn">إعادة اللعب</button>
+                <button id="menu-btn">العودة للقائمة</button>
+            </div>
+
+            <!-- إعدادات اللعبة -->
+            <div id="settings-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>إعدادات اللعبة</h2>
+                    <div class="setting-item">
+                        <label for="difficulty">مستوى الصعوبة:</label>
+                        <select id="difficulty">
+                            <option value="easy">سهل</option>
+                            <option value="normal" selected>عادي</option>
+                            <option value="hard">صعب</option>
+                            <option value="extreme">صعب جداً</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="bubble-speed">سرعة الفقاعات:</label>
+                        <input type="range" id="bubble-speed" min="0.5" max="2" step="0.1" value="1">
+                        <span id="speed-value">1.0x</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="bubble-size">حجم الفقاعات:</label>
+                        <input type="range" id="bubble-size" min="0.7" max="1.5" step="0.1" value="1">
+                        <span id="size-value">1.0x</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="color-mode">نمط الألوان:</label>
+                        <select id="color-mode">
+                            <option value="normal">عادي</option>
+                            <option value="neon">نيون</option>
+                            <option value="pastel">باستيل</option>
+                            <option value="dark">داكن</option>
+                        </select>
+                    </div>
+                    <button id="save-settings">حفظ الإعدادات</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
